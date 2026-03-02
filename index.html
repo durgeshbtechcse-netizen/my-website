@@ -1,0 +1,452 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>A Special Surprise for Sneha</title>
+    <style>
+        :root {
+            --glow-color: #ff007f;
+            --secondary-glow: #f848a3;
+            --text-color: #ffffff;
+            --bg-color: #000000;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            font-family: 'Segoe UI', 'Roboto', sans-serif;
+            overflow: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            text-align: center;
+        }
+
+        .container {
+            position: relative;
+            z-index: 10;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100%;
+            width: 100%;
+            padding: 20px;
+        }
+
+        #pre-birthday-screen, #birthday-screen {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            transition: opacity 1.5s ease-in-out;
+        }
+
+        #pre-birthday-screen {
+            opacity: 1;
+            z-index: 20;
+        }
+
+        #birthday-screen {
+            opacity: 0;
+            z-index: 10;
+            pointer-events: none;
+        }
+
+        .glowing-text {
+            font-size: 2.5rem;
+            color: var(--text-color);
+            text-shadow: 
+                0 0 7px var(--text-color),
+                0 0 10px var(--glow-color),
+                0 0 21px var(--glow-color),
+                0 0 42px var(--glow-color),
+                0 0 82px var(--glow-color),
+                0 0 92px var(--glow-color);
+            animation: glow-animation 2s ease-in-out infinite alternate;
+        }
+
+        #countdown {
+            margin-top: 2rem;
+            font-size: 2rem;
+            font-weight: bold;
+            text-shadow: 0 0 5px var(--secondary-glow);
+        }
+        
+        #countdown span {
+            display: inline-block;
+            padding: 0 10px;
+        }
+
+        #birthday-heading {
+            font-size: 3rem;
+            animation: text-fade-in 2s ease-out;
+        }
+
+        .message {
+            margin-top: 2rem;
+            font-size: 1.5rem;
+            font-style: italic;
+            line-height: 1.6;
+            max-width: 600px;
+            text-shadow: 0 0 5px var(--secondary-glow);
+            animation: text-fade-in 3s ease-out;
+        }
+
+        .signature {
+            margin-top: 2rem;
+            font-size: 1.2rem;
+            animation: text-fade-in 4s ease-out;
+        }
+
+        #music-button {
+            margin-top: 2.5rem;
+            padding: 12px 25px;
+            font-size: 1.1rem;
+            cursor: pointer;
+            border: 2px solid var(--glow-color);
+            background-color: transparent;
+            color: var(--text-color);
+            border-radius: 50px;
+            text-shadow: 0 0 5px var(--glow-color);
+            box-shadow: 0 0 15px var(--glow-color) inset, 0 0 10px var(--glow-color);
+            transition: all 0.3s ease;
+            animation: text-fade-in 5s ease-out;
+        }
+
+        #music-button:hover {
+            background-color: var(--glow-color);
+            box-shadow: 0 0 25px var(--glow-color) inset, 0 0 20px var(--glow-color);
+            color: var(--bg-color);
+            font-weight: bold;
+        }
+
+        canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+        }
+
+        .hearts-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            z-index: 2;
+            pointer-events: none;
+        }
+
+        .heart {
+            position: absolute;
+            bottom: -50px;
+            font-size: 2rem;
+            color: var(--glow-color);
+            animation: float-up linear infinite;
+            text-shadow: 0 0 10px var(--glow-color);
+        }
+
+        @keyframes float-up {
+            0% { transform: translateY(0); opacity: 1; }
+            100% { transform: translateY(-100vh); opacity: 0; }
+        }
+
+        @keyframes glow-animation {
+            from {
+                text-shadow: 
+                    0 0 5px #fff,
+                    0 0 10px var(--secondary-glow),
+                    0 0 15px var(--secondary-glow),
+                    0 0 20px var(--secondary-glow),
+                    0 0 25px var(--secondary-glow),
+                    0 0 30px var(--secondary-glow),
+                    0 0 35px var(--secondary-glow);
+            }
+            to {
+                text-shadow: 
+                    0 0 10px #fff,
+                    0 0 20px var(--glow-color),
+                    0 0 30px var(--glow-color),
+                    0 0 40px var(--glow-color),
+                    0 0 50px var(--glow-color),
+                    0 0 60px var(--glow-color),
+                    0 0 70px var(--glow-color);
+            }
+        }
+
+        @keyframes text-fade-in {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .glowing-text {
+                font-size: 2rem;
+            }
+            #countdown {
+                font-size: 1.5rem;
+            }
+            #birthday-heading {
+                font-size: 2.2rem;
+            }
+            .message {
+                font-size: 1.2rem;
+                padding: 0 10px;
+            }
+            .signature {
+                font-size: 1rem;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            #countdown {
+                font-size: 1.1rem;
+            }
+             #countdown span {
+                padding: 0 5px;
+            }
+            #birthday-heading {
+                font-size: 1.8rem;
+            }
+            .message {
+                font-size: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <canvas id="fireworks-canvas"></canvas>
+    <div class="hearts-container" id="hearts-container"></div>
+
+    <div class="container">
+        <div id="pre-birthday-screen">
+            <h1 class="glowing-text">Hi Sneha… wait till 12:00 💫</h1>
+            <div id="countdown">
+                <span id="days"></span> Days
+                <span id="hours"></span> Hours
+                <span id="minutes"></span> Mins
+                <span id="seconds"></span> Secs
+            </div>
+        </div>
+
+        <div id="birthday-screen">
+            <h1 id="birthday-heading" class="glowing-text">🎉 HAPPY BIRTHDAY SNEHA ❤️ 🎉</h1>
+            <p class="message">
+                Teri hasi meri duniya hai,<br>
+                Tera saath meri khushiyan hai.<br>
+                Door rehkar bhi tu dil ke paas hai,<br>
+                Kyunki tu meri sabse khaas hai 💖
+            </p>
+            <p class="signature">Always yours… no matter the distance ✨</p>
+            <button id="music-button">Play Music 🎵</button>
+        </div>
+    </div>
+
+    <audio id="birthday-music" loop>
+        <source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" type="audio/mpeg">
+        Your browser does not support the audio element.
+    </audio>
+
+    <script>
+        window.onload = function() {
+            // --- Countdown Logic ---
+            const countdownElement = document.getElementById('countdown');
+            const preBirthdayScreen = document.getElementById('pre-birthday-screen');
+            const birthdayScreen = document.getElementById('birthday-screen');
+            const targetDate = new Date("March 3, 2026 00:00:00").getTime();
+            let countdownTriggered = false;
+
+            const countdownInterval = setInterval(() => {
+                const now = new Date().getTime();
+                const distance = targetDate - now;
+
+                if (distance <= 0) {
+                    if (!countdownTriggered) {
+                        clearInterval(countdownInterval);
+                        countdownElement.innerHTML = "The wait is over!";
+                        startBirthdaySurprise();
+                        countdownTriggered = true;
+                    }
+                    return;
+                }
+
+                const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+                const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+                const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+                document.getElementById('days').innerText = days;
+                document.getElementById('hours').innerText = hours;
+                document.getElementById('minutes').innerText = minutes;
+                document.getElementById('seconds').innerText = seconds;
+            }, 1000);
+
+            function startBirthdaySurprise() {
+                preBirthdayScreen.style.opacity = '0';
+                setTimeout(() => {
+                    preBirthdayScreen.style.display = 'none';
+                    birthdayScreen.style.opacity = '1';
+                    birthdayScreen.style.pointerEvents = 'auto';
+                    initFireworks();
+                }, 1500);
+            }
+
+            // --- Music Player ---
+            const musicButton = document.getElementById('music-button');
+            const birthdayMusic = document.getElementById('birthday-music');
+            musicButton.addEventListener('click', () => {
+                if (birthdayMusic.paused) {
+                    birthdayMusic.play().catch(error => {
+                        console.log("Autoplay was prevented:", error);
+                    });
+                    musicButton.innerText = "Pause Music ⏸️";
+                } else {
+                    birthdayMusic.pause();
+                    musicButton.innerText = "Play Music 🎵";
+                }
+            });
+
+            // --- Floating Hearts ---
+            const heartsContainer = document.getElementById('hearts-container');
+            const heartChars = ['❤️', '💖', '💕', '✨'];
+            function createHeart() {
+                const heart = document.createElement('div');
+                heart.classList.add('heart');
+                heart.innerText = heartChars[Math.floor(Math.random() * heartChars.length)];
+                heart.style.left = Math.random() * 100 + 'vw';
+                heart.style.animationDuration = Math.random() * 5 + 5 + 's'; // 5-10 seconds
+                heart.style.fontSize = Math.random() * 1.5 + 1 + 'rem';
+                heartsContainer.appendChild(heart);
+
+                setTimeout(() => {
+                    heart.remove();
+                }, 10000);
+            }
+            setInterval(createHeart, 500);
+
+            // --- Canvas Fireworks ---
+            const canvas = document.getElementById('fireworks-canvas');
+            const ctx = canvas.getContext('2d');
+            let fireworks = [];
+            let particles = [];
+
+            function initFireworks() {
+                canvas.width = window.innerWidth;
+                canvas.height = window.innerHeight;
+                setInterval(() => {
+                    if (Math.random() < 0.25) { // Launch fireworks periodically
+                        fireworks.push(new Firework());
+                    }
+                }, 1000);
+                animate();
+            }
+
+            function Firework() {
+                this.x = Math.random() * canvas.width;
+                this.y = canvas.height;
+                this.targetY = Math.random() * (canvas.height / 2);
+                this.color = `hsl(${Math.random() * 360}, 100%, 70%)`;
+                this.speed = 3;
+                this.angle = Math.PI * 1.5;
+                
+                this.update = function() {
+                    this.y -= this.speed;
+                }
+                
+                this.draw = function() {
+                    ctx.beginPath();
+                    ctx.arc(this.x, this.y, 3, 0, Math.PI * 2);
+                    ctx.fillStyle = this.color;
+                    ctx.fill();
+                }
+            }
+
+            function Particle(x, y, color) {
+                this.x = x;
+                this.y = y;
+                this.color = color;
+                this.speed = Math.random() * 5 + 1;
+                this.angle = Math.random() * Math.PI * 2;
+                this.friction = 0.95;
+                this.gravity = 0.1;
+                this.alpha = 1;
+                this.decay = Math.random() * 0.03 + 0.01;
+                this.velX = Math.cos(this.angle) * this.speed;
+                this.velY = Math.sin(this.angle) * this.speed;
+
+                this.update = function() {
+                    this.velX *= this.friction;
+                    this.velY *= this.friction;
+                    this.velY += this.gravity;
+                    this.x += this.velX;
+                    this.y += this.velY;
+                    this.alpha -= this.decay;
+                }
+
+                this.draw = function() {
+                    ctx.save();
+                    ctx.globalAlpha = this.alpha;
+                    ctx.beginPath();
+                    ctx.arc(this.x, this.y, 2, 0, Math.PI * 2);
+                    ctx.fillStyle = this.color;
+                    ctx.fill();
+                    ctx.restore();
+                }
+            }
+
+            function createParticles(x, y, color) {
+                const particleCount = 100;
+                for (let i = 0; i < particleCount; i++) {
+                    particles.push(new Particle(x, y, color));
+                }
+            }
+
+            function animate() {
+                requestAnimationFrame(animate);
+                ctx.fillStyle = 'rgba(0, 0, 0, 0.1)';
+                ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+                for (let i = fireworks.length - 1; i >= 0; i--) {
+                    fireworks[i].draw();
+                    fireworks[i].update();
+
+                    if (fireworks[i].y < fireworks[i].targetY) {
+                        createParticles(fireworks[i].x, fireworks[i].y, fireworks[i].color);
+                        fireworks.splice(i, 1);
+                    }
+                }
+
+                for (let i = particles.length - 1; i >= 0; i--) {
+                    particles[i].draw();
+                    particles[i].update(.0);
+
+                    if (particles[i].alpha <= 0) {
+                        particles.splice(i, 1);
+                    }
+                }
+            }
+            
+            window.addEventListener('resize', () => {
+                canvas.width = window.innerWidth;
+                canvas.height = window.innerHeight;
+            });
+        };
+    </script>
+</body>
+</html>
